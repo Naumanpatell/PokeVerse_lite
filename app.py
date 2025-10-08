@@ -8,20 +8,16 @@ app = Flask(__name__)
 
 base_url = "https://pokeapi.co/api/v2/"
 
-# Function to fetch Pokémon info
 def Pokeverse(pokemon_name):
     url = f'{base_url}pokemon/{pokemon_name}'
     try:
         response = requests.get(url)
-        response.raise_for_status() # Raises HTTPError for bad responses 
+        response.raise_for_status() 
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f"Error fetching Pokémon info for {pokemon_name}: {e}")
         return None
 
-# Function to fetch the Pokémon type info
-#t This function implicitly uses Pokeverse but for consistency, let's keep it separae
-# if its logic is slightly different (e.g., just returning the type)
 def get_pokemon_type(pokemon_name):
     url = f"{base_url}pokemon/{pokemon_name}"
     try:
@@ -32,12 +28,11 @@ def get_pokemon_type(pokemon_name):
         return primary_type
     except (requests.exceptions.RequestException, IndexError) as e:
         print(f"Error fetching Pokémon type for {pokemon_name}: {e}")
-        return 'main' # Default to 'normal' on error or if no types are found
+        return 'main' 
 
 def get_pokemon_of_day():
     """Get a random Pokémon for the current day using a seeded random generator"""
     try:
-        # Get all Pokémon names
         response = requests.get('https://pokeapi.co/api/v2/pokemon?limit=10000')
         response.raise_for_status()
         data = response.json()
@@ -46,21 +41,13 @@ def get_pokemon_of_day():
         if not pokemon_list:
             return None
             
-        # Create a daily seed for consistent random selection
         today = datetime.now()
-        day_of_year = today.timetuple().tm_yday  # Day of year (1-366)
+        day_of_year = today.timetuple().tm_yday
         year = today.year
         
-        # Combine year and day of year for a unique daily seed
         daily_seed = year * 1000 + day_of_year
-        
-        # Set the random seed for today
         random.seed(daily_seed)
-        
-        # Get a random Pokémon
         random_pokemon = random.choice(pokemon_list)
-        
-        # Reset the random seed to avoid affecting other parts of the application
         random.seed()
         
         return random_pokemon
@@ -91,7 +78,6 @@ def home():
         print("API response for all Pokémon names did not contain 'results' key.")
         pokemon_list = []
     
-    # Get the Pokémon of the Day
     pokemon_of_day_name = get_pokemon_of_day()
     if pokemon_of_day_name:
         try:
@@ -113,20 +99,17 @@ def pokedex():
     
     try:
         response = requests.get('https://pokeapi.co/api/v2/pokemon?limit=10000')
-        response.raise_for_status() # Raise an HTTPError for bad responses (4xx or 5xx)
+        response.raise_for_status()
         data = response.json()
         pokemon_list = [pokemon['name'] for pokemon in data['results']]
         print(f"Successfully loaded {len(pokemon_list)} Pokémon for autocomplete")
     except requests.exceptions.RequestException as e:
-        # If fetching the full list fails, print an error and use an empty list
         print(f"Error fetching all Pokémon names for autocomplete: {e}")
         pokemon_list = [] 
     except KeyError:
-        # Handle cases where 'results' might be missing in a malformed response
         print("API response for all Pokémon names did not contain 'results' key.")
         pokemon_list = [] 
     
-    # Check for pokemon parameter in GET request (from homepage link)
     if request.method == 'GET' and request.args.get('pokemon'):
         name = request.args.get('pokemon').lower()
         pokemon_data = Pokeverse(name) 
@@ -137,7 +120,6 @@ def pokedex():
             else:
                 primary_type = 'normal' 
     
-    # Handle POST request (from search form)
     elif request.method == 'POST':
         name = request.form['pokemon_name'].lower()
         pokemon_data = Pokeverse(name) 
@@ -166,7 +148,3 @@ def pokemon_guess():
 @app.route('/pokemon_quiz')
 def pokemon_quiz():
     return render_template('pokemon_quiz.html')
-
-        
-if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 5000))) 
