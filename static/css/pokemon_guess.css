@@ -63,6 +63,31 @@
     animation: particleFloat 4s ease-in-out infinite;
 }
 
+/* Floating particle positions */
+.floating-particle:nth-child(1) {
+    left: 10%;
+    top: 20%;
+    animation-delay: 0s;
+}
+
+.floating-particle:nth-child(2) {
+    right: 15%;
+    top: 40%;
+    animation-delay: 1s;
+}
+
+.floating-particle:nth-child(3) {
+    left: 20%;
+    bottom: 30%;
+    animation-delay: 2s;
+}
+
+.floating-particle:nth-child(4) {
+    right: 25%;
+    bottom: 20%;
+    animation-delay: 3s;
+}
+
 @keyframes particleFloat {
     0%, 100% { 
         transform: translateY(0px) scale(1);
@@ -109,9 +134,15 @@
     }
 }
 
+/* Navbar height */
+.custom-navbar {
+    height: 100px;
+}
+
 /* Enhanced main container */
 .pokemon-guess-container {
     background: rgba(255, 255, 255, 0.15);
+    -webkit-backdrop-filter: blur(25px);
     backdrop-filter: blur(25px);
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 25px;
@@ -140,6 +171,7 @@
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
 
@@ -244,6 +276,7 @@
     font-size: clamp(0.7rem, 2vw, 0.9rem);
     cursor: pointer;
     transition: all 0.3s ease;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
 
@@ -394,6 +427,7 @@
         0 4px 8px rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
 
@@ -471,6 +505,10 @@
     transform: translateY(-1px) scale(1.02);
 }
 
+.next-btn.hidden {
+    display: none;
+}
+
 /* Enhanced feedback */
 .guess-feedback {
     font-size: clamp(0.9rem, 3vw, 1.1rem);
@@ -494,7 +532,7 @@
         margin: 80px 1rem 0 1rem;
         padding: 1.5rem 1rem;
         max-width: none;
-        min-height: auto;
+        min-height: 0;
         height: auto;
     }
     

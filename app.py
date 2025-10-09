@@ -148,3 +148,10 @@ def pokemon_guess():
 @app.route('/pokemon_quiz')
 def pokemon_quiz():
     return render_template('pokemon_quiz.html')
+
+@app.route('/ai_assistant')
+def ai_assistant():
+    return render_template('ai_assistant.html')
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)

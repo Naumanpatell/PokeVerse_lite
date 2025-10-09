@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokeverse Games</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -11,7 +11,7 @@
 <body>
 
   
-  <nav class="custom-navbar" style="height: 100px">
+  <nav class="custom-navbar">
     <div class="navbar-container">
       <div class="logo-section">
         <img src="/static/images/pokeball.webp" class="pokeball" alt="Pokeball Logo" />
@@ -49,24 +49,24 @@
     <div class="games-grid">
 
       <!-- Game 1 -->
-      <div class="game-card" role="button" tabindex="0">
+      <a href="{{ url_for('pokemon_guess') }}" class="game-card" aria-label="Play Guess the Pokémon game">
         <h3>Guess the Pokémon</h3>
         <p>Can you guess the Pokémon based on silhouette?</p>
-        <a href="{{ url_for('pokemon_guess') }}" class="play-button" aria-label="Play Guess the Pokémon game">Play</a>
-      </div>
+        <span class="play-button">Play</span>
+      </a>
 
       <!-- Game 2 -->
-      <div class="game-card" role="button" tabindex="0">
+      <a href="{{ url_for('pokemon_quiz') }}" class="game-card" aria-label="Play Pokémon Quiz game">
         <h3>Pokémon Quiz</h3>
         <p>Test your knowledge across generations!</p>
-        <a href="{{ url_for('pokemon_quiz') }}" class="play-button" aria-label="Play Pokémon Quiz game">Play</a>
-      </div>
+        <span class="play-button">Play</span>
+      </a>
 
       <!-- Coming Soon -->
-      <div class="game-card" role="button" tabindex="0">
+      <div class="game-card disabled-card">
         <h3>Coming Soon</h3>
         <p>More games will be added soon. Stay tuned!</p>
-        <a href="#" class="play-button disabled" aria-label="Coming soon games" tabindex="-1">Coming Soon</a>
+        <span class="play-button disabled">Coming Soon</span>
       </div>
     </div>
   </main>
@@ -95,29 +95,17 @@ document.addEventListener('click', function(event) {
 
 // Enhanced mobile interactions for game cards
 document.addEventListener('DOMContentLoaded', function() {
-  const gameCards = document.querySelectorAll('.game-card');
+  const gameCards = document.querySelectorAll('.game-card:not(.disabled-card)');
   
   gameCards.forEach(card => {
-    const playButton = card.querySelector('.play-button:not(.disabled)');
+    // Add touch feedback for mobile
+    card.addEventListener('touchstart', function() {
+      this.style.transform = 'scale(0.98)';
+    }, { passive: true });
     
-    if (playButton) {
-      // Add touch feedback for mobile
-      card.addEventListener('touchstart', function() {
-        this.style.transform = 'scale(0.98)';
-      }, { passive: true });
-      
-      card.addEventListener('touchend', function() {
-        this.style.transform = '';
-      }, { passive: true });
-      
-      // Keyboard navigation support
-      card.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          playButton.click();
-        }
-      });
-    }
+    card.addEventListener('touchend', function() {
+      this.style.transform = '';
+    }, { passive: true });
   });
   
   // Prevent zoom on double tap for mobile

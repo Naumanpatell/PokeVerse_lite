@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Assistant - Pokeverse</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ai_assistant.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Background Elements -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- Navigation -->
+  <nav class="custom-navbar" style="height: 100px">
+    <div class="navbar-container">
+      <div class="logo-section">
+        <img src="/static/images/pokeball.webp" class="pokeball" alt="Pokeball Logo" />
+        <span class="heading">PokeVerse</span>
+      </div>
+      
+      <!-- Desktop Navigation -->
+      <div class="nav-links desktop-nav">
+        <a href="{{url_for('home')}}" class="nav-link">Home</a>
+        <a href="{{ url_for('pokedex') }}" class="nav-link">Pokédex</a>
+        <a href="{{ url_for('games') }}" class="nav-link">Games</a>
+        <a href="{{ url_for('ai_assistant') }}" class="nav-link active">AI Assistant</a>
+      </div>
+      
+      <!-- Mobile Hamburger Menu -->
+      <div class="hamburger-menu">
+        <div class="hamburger-icon" onclick="toggleMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="mobile-nav-dropdown" id="mobileNav">
+          <a href="{{url_for('home')}}" class="mobile-nav-link">Home</a>
+          <a href="{{ url_for('pokedex') }}" class="mobile-nav-link">Pokédex</a>
+          <a href="{{ url_for('games') }}" class="mobile-nav-link">Games</a>
+          <a href="{{ url_for('ai_assistant') }}" class="mobile-nav-link active">AI Assistant</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="ai-assistant-main">
+    <div class="ai-assistant-container">
+      <div class="ai-assistant-header">
+        <h1 class="ai-assistant-title">
+          <i class="fas fa-robot"></i>
+          AI Assistant
+        </h1>
+        <p class="ai-assistant-description">
+          Ask me anything about Pokémon! I can help you with information, strategies, and fun facts.
+        </p>
+      </div>
+
+      <!-- Chat Container -->
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+          <div class="message ai-message">
+            <div class="message-avatar">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-content">
+              <p>Hello! I'm your Pokémon AI Assistant. How can I help you today?</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="quick-actions">
+          <button class="quick-action-btn" onclick="askQuestion('Tell me about Pikachu')">
+            <i class="fas fa-bolt"></i>
+            About Pikachu
+          </button>
+          <button class="quick-action-btn" onclick="askQuestion('What are the starter Pokémon?')">
+            <i class="fas fa-seedling"></i>
+            Starter Pokémon
+          </button>
+          <button class="quick-action-btn" onclick="askQuestion('What are the different Pokémon types?')">
+            <i class="fas fa-fire"></i>
+            Pokémon Types
+          </button>
+          <button class="quick-action-btn" onclick="askQuestion('Give me a random Pokémon fact')">
+            <i class="fas fa-dice"></i>
+            Random Fact
+          </button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-container">
+          <div class="chat-input-wrapper">
+            <input type="text" id="messageInput" class="chat-input" placeholder="Ask me anything about Pokémon..." maxlength="500">
+            <button id="sendButton" class="send-button" onclick="sendMessage()">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <div class="input-actions">
+            <button class="action-btn" onclick="clearChat()">
+              <i class="fas fa-trash"></i>
+              Clear Chat
+            </button>
+            <button class="action-btn" onclick="getHint()">
+              <i class="fas fa-lightbulb"></i>
+              Get Hint
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+
+
+
+
+
+
+
+
+
+    <script>
+        // Particle System
+        function createParticles() {
+          const particlesContainer = document.getElementById('particles');
+          const particleCount = 20;
+          
+          for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (8 + Math.random() * 4) + 's';
+            particlesContainer.appendChild(particle);
+          }
+        }
+        
+        // Hamburger Menu Toggle
+        function toggleMenu() {
+          const mobileNav = document.getElementById('mobileNav');
+          const hamburgerIcon = document.querySelector('.hamburger-icon');
+          
+          mobileNav.classList.toggle('active');
+          hamburgerIcon.classList.toggle('active');
+        }
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+          const hamburgerMenu = document.querySelector('.hamburger-menu');
+          const mobileNav = document.getElementById('mobileNav');
+          const hamburgerIcon = document.querySelector('.hamburger-icon');
+          
+          if (!hamburgerMenu.contains(event.target) && mobileNav.classList.contains('active')) {
+            mobileNav.classList.remove('active');
+            hamburgerIcon.classList.remove('active');
+          }
+        });
+
+        // AI Assistant Chat Functionality
+        function sendMessage() {
+          const input = document.getElementById('messageInput');
+          const message = input.value.trim();
+          
+          if (message) {
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Simulate AI response (you can replace this with actual AI integration)
+            setTimeout(() => {
+              const response = generateAIResponse(message);
+              addMessage(response, 'ai');
+            }, 1000);
+          }
+        }
+
+        function askQuestion(question) {
+          document.getElementById('messageInput').value = question;
+          sendMessage();
+        }
+
+        function addMessage(content, sender) {
+          const chatMessages = document.getElementById('chatMessages');
+          const messageDiv = document.createElement('div');
+          messageDiv.className = `message ${sender}-message`;
+          
+          const avatar = sender === 'ai' ? '<i class="fas fa-robot"></i>' : '<i class="fas fa-user"></i>';
+          
+          messageDiv.innerHTML = `
+            <div class="message-avatar">
+              ${avatar}
+            </div>
+            <div class="message-content">
+              <p>${content}</p>
+            </div>
+          `;
+          
+          chatMessages.appendChild(messageDiv);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function generateAIResponse(userMessage) {
+          const responses = {
+            'pikachu': 'Pikachu is an Electric-type Pokémon and the mascot of the Pokémon franchise! It\'s known for its yellow fur, red cheeks, and lightning bolt-shaped tail. Pikachu evolves from Pichu and can evolve into Raichu.',
+            'starter': 'The original starter Pokémon are Bulbasaur (Grass/Poison), Charmander (Fire), and Squirtle (Water). Each generation has its own set of starter Pokémon with different types and abilities!',
+            'types': 'There are 18 different Pokémon types: Normal, Fire, Water, Electric, Grass, Ice, Fighting, Poison, Ground, Flying, Psychic, Bug, Rock, Ghost, Dragon, Dark, Steel, and Fairy. Each type has strengths and weaknesses against other types!',
+            'random': 'Did you know that Mewtwo was the first Legendary Pokémon created? It was cloned from Mew\'s DNA and is one of the most powerful Psychic-type Pokémon!',
+            'default': 'That\'s an interesting question about Pokémon! While I\'m a demo AI assistant, I can tell you that the Pokémon world is full of amazing creatures with unique abilities and types. Feel free to explore the Pokédex to learn more about specific Pokémon!'
+          };
+          
+          const lowerMessage = userMessage.toLowerCase();
+          
+          if (lowerMessage.includes('pikachu')) return responses.pikachu;
+          if (lowerMessage.includes('starter')) return responses.starter;
+          if (lowerMessage.includes('type')) return responses.types;
+          if (lowerMessage.includes('random') || lowerMessage.includes('fact')) return responses.random;
+          
+          return responses.default;
+        }
+
+        function clearChat() {
+          const chatMessages = document.getElementById('chatMessages');
+          chatMessages.innerHTML = `
+            <div class="message ai-message">
+              <div class="message-avatar">
+                <i class="fas fa-robot"></i>
+              </div>
+              <div class="message-content">
+                <p>Hello! I'm your Pokémon AI Assistant. How can I help you today?</p>
+              </div>
+            </div>
+          `;
+        }
+
+        function getHint() {
+          const hints = [
+            'Try asking about specific Pokémon like "Tell me about Charizard"',
+            'Ask about Pokémon types: "What are the different types?"',
+            'Get information about starter Pokémon: "What are the starter Pokémon?"',
+            'Ask for fun facts: "Give me a random Pokémon fact"',
+            'Try asking about evolution: "How does Pikachu evolve?"'
+          ];
+          
+          const randomHint = hints[Math.floor(Math.random() * hints.length)];
+          addMessage(`💡 Hint: ${randomHint}`, 'ai');
+        }
+
+        // Allow sending message with Enter key
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            sendMessage();
+          }
+        });
+
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+          createParticles();
+        });
+    </script>
+</body>
+</html>
