@@ -1,3 +1,4 @@
+
 # 🐉 Pokeverse – Interactive Pokémon Guide  
 
 An interactive web app that lets users explore data for 10,000+ Pokémon, built with Flask and PokéAPI.  
@@ -17,7 +18,6 @@ Includes a chatbot, dynamic search, and responsive design to make exploring the 
 ## 🛠️ Tech Stack  
 - **Backend:** Flask, Python  
 - **Frontend:** HTML, CSS, JavaScript  
-- **API:** PokéAPI  
-- **Other:** Chatbot integration  
+- **API:** PokéAPI
 
 ---
